@@ -12,65 +12,47 @@ class ListNode {
  }
 public class Problem2 {
     public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
-        List<Integer> fromFistNode = getNumberFromNode(l1);
-        List<Integer> fromSecondNode = getNumberFromNode(l2).reversed();
-        int totalSum = getNumberValueFromList(fromFistNode) +
-                getNumberValueFromList(fromSecondNode);
-        
-        return getReversedLinkedList(totalSum);
-    }
-    
-    private ListNode getReversedLinkedList(int number) {
-        ListNode node = null;
-        
-        while (number != 0) {
-            int modValue = number%10;
-            
-            if (node == null) {
-                node = new ListNode(modValue);
-            } else {
-                node.next = new ListNode(modValue);
-            }
+       int reminder = 0;
+       ListNode result = null;
+       ListNode current = null;
 
-            number = number/10;
-        }
-        
-        return node;
-    }
-    
-    private int getNumberValueFromList(List<Integer> list) {
-        int sum = 0;
-        
-        for (int i : list) {
-            sum += i*10;
-        }
-        return sum;
-    }
+       while(l1 != null || l2 != null || reminder != 0) {
+           int firstNodeValue =  l1 != null ? l1.val : 0;
+           int secondNodeValue = l2 != null ? l2.val : 0;
 
-    private List<Integer> getNumberFromNode(ListNode l1) {
-        List<Integer> result = new ArrayList<>();
+           int sum = reminder + firstNodeValue + secondNodeValue;
+           int valueToStore = sum % 10;
 
-        while (l1 != null) {
-            result.add(l1.val);
-            l1 = l1.next;
-        }
+           if (current == null) {
+               result = new ListNode(valueToStore);
+               current = result;
+           } else {
+               current.next = new ListNode(valueToStore);
+               current = current.next;
+           }
+           reminder = sum / 10;
 
-        return result;
+           l1 = l1 != null ?  l1.next : null;
+           l2 = l2 != null ? l2.next : null;
+       }
+
+       return result;
     }
 
     private ListNode prepareListNode(int[] num) {
-        ListNode node = null;
-
-        for (int i = 0; i< num.length; i++) {
-
-            if (node == null) {
-                node = new ListNode(num[i]);
-            } else {
-                node.next = new ListNode(num[i]);
-            }
+        if (num == null || num.length == 0) {
+            return null;
         }
 
-        return node;
+        ListNode head = new ListNode(num[0]);
+        ListNode current = head;
+
+        for (int i = 1; i < num.length; i++) {
+            current.next = new ListNode(num[i]);
+            current = current.next;
+        }
+
+        return head;
     }
 
     private void printListNode(ListNode node) {
